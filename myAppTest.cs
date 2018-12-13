@@ -13,7 +13,7 @@ using Autodesk.Revit.Creation;
 using Autodesk.Revit.Exceptions;
 
 
-public class myApp : IExternalApplication
+public class myAppTest : IExternalApplication
 {
 	public Result OnStartup(UIControlledApplication application)
 	{

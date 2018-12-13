@@ -5,7 +5,7 @@
     <FullClassName>myAppTest</FullClassName>
     <VisibilityMode>AlwaysVisible</VisibilityMode>
     <Assembly>myAppTest.dll</Assembly>
-    <AddInId>98653df9-0718-4e19-b517-7e7a6cee333f</AddInId>
+    <AddInId>52bda2a7-dfc3-4d5b-9a94-9f28a462becd</AddInId>
     <VendorId>mymailegorov@gmail.com</VendorId>
     <VendorDescription>Egorov.A: mymailegorov@gmail.com</VendorDescription>
   </AddIn>
