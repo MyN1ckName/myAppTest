@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<RevitAddIns>
+  <AddIn Type="Application">
+    <Name>myAppTest</Name>
+    <FullClassName>myAppTest</FullClassName>
+    <VisibilityMode>AlwaysVisible</VisibilityMode>
+    <Assembly>myAppTest.dll</Assembly>
+    <AddInId>98653df9-0718-4e19-b517-7e7a6cee333f</AddInId>
+    <VendorId>mymailegorov@gmail.com</VendorId>
+    <VendorDescription>Egorov.A: mymailegorov@gmail.com</VendorDescription>
+  </AddIn>
+</RevitAddIns>
