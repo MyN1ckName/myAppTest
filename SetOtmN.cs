@@ -40,8 +40,10 @@ public class SetOtmN : IExternalCommand
 					baseLvl.Set(GetBaseLvl(doc, elem));
 					offsetLvl.Set(GetOffsetLvl(elem));
 				}
-				catch { }
-				t.Commit();
+				catch
+				{ 
+					t.Commit();
+				}				
 			}
 		}
 
