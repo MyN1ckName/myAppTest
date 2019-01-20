@@ -34,16 +34,12 @@ public class SetOtmN : IExternalCommand
 
 			using (Transaction t = new Transaction(doc, "SetParametrs"))
 			{
-				t.Start("Set");
-				try
-				{
-					baseLvl.Set(GetBaseLvl(doc, elem));
-					offsetLvl.Set(GetOffsetLvl(elem));
-				}
-				catch
-				{ 
-					t.Commit();
-				}				
+				t.Start("SetParameters");
+
+				baseLvl.Set(GetBaseLvl(doc, elem));
+				offsetLvl.Set(GetOffsetLvl(elem));
+				
+				t.Commit();	 								
 			}
 		}
 
