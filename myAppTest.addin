@@ -2,7 +2,7 @@
 <RevitAddIns>
   <AddIn Type="Application">
     <Name>myAppTest</Name>
-    <FullClassName>myAppTest</FullClassName>
+    <FullClassName>myAppTest.CrtRibbon</FullClassName>
     <VisibilityMode>AlwaysVisible</VisibilityMode>
     <Assembly>myAppTest.dll</Assembly>
     <AddInId>52bda2a7-dfc3-4d5b-9a94-9f28a462becd</AddInId>

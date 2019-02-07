@@ -9,75 +9,78 @@ using Autodesk.Revit.UI.Selection;
 using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.Attributes;
 
-[TransactionAttribute(TransactionMode.Manual)]
-[RegenerationAttribute(RegenerationOption.Manual)]
-public class SetOtmN : IExternalCommand
+namespace myAppTest
 {
-	public Result Execute(ExternalCommandData commandData,
-		ref string messege,
-		ElementSet elements)
+	[TransactionAttribute(TransactionMode.Manual)]
+	[RegenerationAttribute(RegenerationOption.Manual)]
+	public class SetOtmN : IExternalCommand
 	{
-		UIApplication uiApp = commandData.Application;
-		Document doc = uiApp.ActiveUIDocument.Document;
-
-		try
+		public Result Execute(ExternalCommandData commandData,
+			ref string messege,
+			ElementSet elements)
 		{
-			Reference pickedRef = null;
-			Selection sel = uiApp.ActiveUIDocument.Selection;
-			WindowPickFilter selFiter = new WindowPickFilter();
-			pickedRef = sel.PickObject(ObjectType.Element, selFiter, "Выберите отверстие");
+			UIApplication uiApp = commandData.Application;
+			Document doc = uiApp.ActiveUIDocument.Document;
 
-			Element elem = doc.GetElement(pickedRef.ElementId);
-
-			Parameter baseLvl = elem.LookupParameter("Рзм.ВысотаБазовогоУровня");
-			Parameter offsetLvl = elem.LookupParameter("Рзм.СмещениеОтУровня");
-
-			using (Transaction t = new Transaction(doc, "SetParametrs"))
+			try
 			{
-				t.Start("SetParameters");
+				Reference pickedRef = null;
+				Selection sel = uiApp.ActiveUIDocument.Selection;
+				WindowPickFilter selFiter = new WindowPickFilter();
+				pickedRef = sel.PickObject(ObjectType.Element, selFiter, "Выберите отверстие");
 
-				baseLvl.Set(GetBaseLvl(doc, elem));
-				offsetLvl.Set(GetOffsetLvl(elem));
-				
-				t.Commit();	 								
+				Element elem = doc.GetElement(pickedRef.ElementId);
+
+				Parameter baseLvl = elem.LookupParameter("Рзм.ВысотаБазовогоУровня");
+				Parameter offsetLvl = elem.LookupParameter("Рзм.СмещениеОтУровня");
+
+				using (Transaction t = new Transaction(doc, "SetParametrs"))
+				{
+					t.Start("SetParameters");
+
+					baseLvl.Set(GetBaseLvl(doc, elem));
+					offsetLvl.Set(GetOffsetLvl(elem));
+
+					t.Commit();
+				}
 			}
+
+			catch (Autodesk.Revit.Exceptions.OperationCanceledException)
+			{
+				return Result.Cancelled;
+			}
+
+			catch (Exception ex)
+			{
+				messege = ex.Message;
+				return Result.Failed;
+			}
+
+			return Result.Succeeded;
 		}
 
-		catch (Autodesk.Revit.Exceptions.OperationCanceledException)
+		public double GetBaseLvl(Document doc, Element elem) //Получение значения параметра "Базовый уровень"
 		{
-			return Result.Cancelled;
+			Element lvl = doc.GetElement(elem.get_Parameter(BuiltInParameter.FAMILY_LEVEL_PARAM).AsElementId());
+			var baseLvl = lvl.get_Parameter(BuiltInParameter.LEVEL_ELEV).AsDouble();
+			return baseLvl;
 		}
-
-		catch (Exception ex)
+		public double GetOffsetLvl(Element elem) //Получение значения параметра "Высота верхнего бруса"
 		{
-			messege = ex.Message;
-			return Result.Failed;
+			var offsetLvL = elem.get_Parameter(BuiltInParameter.INSTANCE_HEAD_HEIGHT_PARAM).AsDouble();
+			return offsetLvL;
 		}
-
-		return Result.Succeeded;
 	}
 
-	public double GetBaseLvl(Document doc, Element elem) //Получение значения параметра "Базовый уровень"
+	public class WindowPickFilter : ISelectionFilter
 	{
-		Element lvl = doc.GetElement(elem.get_Parameter(BuiltInParameter.FAMILY_LEVEL_PARAM).AsElementId());
-		var baseLvl = lvl.get_Parameter(BuiltInParameter.LEVEL_ELEV).AsDouble();
-		return baseLvl;
-	}
-	public double GetOffsetLvl(Element elem) //Получение значения параметра "Высота верхнего бруса"
-	{
-		var offsetLvL = elem.get_Parameter(BuiltInParameter.INSTANCE_HEAD_HEIGHT_PARAM).AsDouble();
-		return offsetLvL;
-	}
-}
-
-public class WindowPickFilter : ISelectionFilter
-{
-	public bool AllowElement(Element element)
-	{
-		return (element.Category.Id.IntegerValue.Equals((int)BuiltInCategory.OST_Windows));
-	}
-	public bool AllowReference(Reference reference, XYZ position)
-	{
-		return false;
+		public bool AllowElement(Element element)
+		{
+			return (element.Category.Id.IntegerValue.Equals((int)BuiltInCategory.OST_Windows));
+		}
+		public bool AllowReference(Reference reference, XYZ position)
+		{
+			return false;
+		}
 	}
 }
